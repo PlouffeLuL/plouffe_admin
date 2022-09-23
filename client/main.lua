@@ -152,6 +152,7 @@ local Admin = {
         }
     },
 
+    Prop = {active = false},
     Scan = {active = false},
     Shownames = {active = false},
     Blips = {active = false, shown = false, list = {}},
@@ -709,6 +710,122 @@ function Admin.Filter:Active(filter,loop,duration)
     AnimpostfxPlay(filter, duration, loop)
 end
 
+function Admin.Prop:place(model)
+    self.active = not self.active
+
+    if not self.active then
+        return
+    end
+
+    CreateThread(function()
+        local ped = PlayerPedId()
+        local offset = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.0, 0.0)
+
+        local entity = Utils:CreateProp(model,{x = offset.x, y = offset.y, z = offset.z - 1.0}, nil, true, true)
+
+        self.coords = GetEntityCoords(entity)
+        self.rotation = GetEntityRotation(entity)
+
+        self.speed = 0.1
+
+        self.coords = {x = self.coords.x, y = self.coords.y, z = self.coords.z}
+        self.rotation = {x = self.rotation.x, y = self.rotation.y, z = self.rotation.z}
+
+        local entityCoords = nil
+        local entityRotation = nil
+
+        while self.active do
+            entityCoords = GetOffsetFromEntityInWorldCoords(entity, 0.0, 0.0, -0.0)
+            entityRotation = GetEntityRotation(entity)
+
+            SetEntityCoords(diamond, entityCoords.x, entityCoords.y, entityCoords.z)
+            SetEntityRotation(diamond, entityRotation.x, entityRotation.y, entityRotation.z)
+
+            DisableAllControlActions(0)
+            DisableAllControlActions(1)
+            DisableAllControlActions(2)
+            DisableAllControlActions(4)
+
+            if IsDisabledControlJustPressed(1, keys.WHEELDOWN) then
+                self.speed = self.speed - 0.01
+                if self.speed < 0.0 then
+                    self.speed = 0.0
+                end
+            end
+
+            if IsDisabledControlJustPressed(1, keys.WHEELUP) then
+                self.speed = self.speed + 0.01
+            end
+
+            if IsDisabledControlPressed(0, keys.W) then
+                self.coords.y = self.coords.y + (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.S) then
+                self.coords.y = self.coords.y - (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.A) then
+                self.coords.x = self.coords.x - (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.D) then
+                self.coords.x = self.coords.x + (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.SPACE) then
+                self.coords.z = self.coords.z + (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.Z) then
+                self.coords.z = self.coords.z - (self.speed / 4)
+            end
+
+            if IsDisabledControlPressed(0, keys.N7) then
+                self.rotation.y = self.rotation.y + self.speed
+            end
+
+            if IsDisabledControlPressed(0, keys.N9) then
+                self.rotation.y = self.rotation.y - self.speed
+            end
+
+            if IsDisabledControlPressed(0, keys.N5) then
+                self.rotation.x = self.rotation.x - self.speed
+            end
+
+            if IsDisabledControlPressed(0, keys.N8) then
+                self.rotation.x = self.rotation.x + self.speed
+            end
+
+            if IsDisabledControlPressed(0, keys.N4) then
+                self.rotation.z = self.rotation.z + self.speed
+            end
+
+            if IsDisabledControlPressed(0, keys.N6) then
+                self.rotation.z = self.rotation.z - self.speed
+            end
+
+            SetEntityCoords(entity, self.coords.x,self.coords.y,self.coords.z)
+            SetEntityRotation(entity, self.rotation.x,self.rotation.y,self.rotation.z, 2)
+
+            Wait(0)
+        end
+
+        local str = (
+        [[
+            entityCoords = vector3(%s, %s, %s),
+            entityRotation = vector3(%s, %s, %s),
+        ]]):format(
+            self.coords.x,self.coords.y,self.coords.z,
+            self.rotation.x,self.rotation.y,self.rotation.z
+        )
+
+        print(str)
+
+        DeleteEntity(entity)
+    end)
+end
+
 function Admin:VehRepair()
     local vehicle = GetVehiclePedIsIn(PlayerPedId())
     if not DoesEntityExist(vehicle) then
@@ -920,11 +1037,17 @@ function Admin.Start(cb)
             local camRotation = ("rotation = vector3(%s,%s,%s)"):format(Admin.Cam.rotation.x,Admin.Cam.rotation.y,Admin.Cam.rotation.z)
             print(camRotation)
         end)
+
         RegisterCommand("doCam", function(s,a,r)
             Admin.Cam:Active(a[1] and true or false)
         end)
+
         RegisterCommand("filter", function(s,a,r)
             Admin.Filter:Active(a[1],a[2],a[3])
+        end)
+
+        RegisterCommand("placeProp", function(s,a,r)
+            Admin.Prop:place(a[1])
         end)
     end
 end
