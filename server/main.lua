@@ -159,6 +159,17 @@ function Admin.Start()
     end
 end
 
+function Admin.playerLoaded(playerId)
+    local identifiers = Admin.GetIdentifiers(playerId)
+    for k,v in pairs(admin_identifiers) do
+        if identifiers[v.prefix] and identifiers[v.prefix] == k then
+            Admin.RegisterAdmin(playerId,tonumber(v.level),v.prefix,k)
+            break
+        end
+    end
+end
+AddEventHandler('plouffe_lib:clientInit', Admin.playerLoaded)
+
 CreateThread(Admin.Start)
 
 Callback:RegisterServerCallback("plouffe_admin:getStaff_level", function(playerId,cb)

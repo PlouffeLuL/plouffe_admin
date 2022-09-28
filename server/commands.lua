@@ -219,7 +219,7 @@ Admin:RegisterCommand({"giveitem", "GIVEITEM", "GiveItem", "giveItem"},4,true,
         {name = 'count', help = "Quantité", type = 'number'}
     }
 },function(playerId, args, raw)
-    Inventory.addItem(args.playerId, args.item, args.count)
+    Inventory.AddItem(args.playerId, args.item, args.count)
 end)
 
 Admin:RegisterCommand({"removeitem", "REMOVEITEM", "RemoveItem", "removeItem"},4,true,
@@ -229,7 +229,7 @@ Admin:RegisterCommand({"removeitem", "REMOVEITEM", "RemoveItem", "removeItem"},4
         {name = 'count', help = "Quantité", type = 'number'}
     }
 },function(playerId, args, raw)
-    Inventory.removeItem(args.playerId, args.item, args.count)
+    Inventory.RemoveItem(args.playerId, args.item, args.count)
 end)
 
 -- Admin:RegisterCommand({"clearinventory", "CLEARINVENTORY"},4,true,
@@ -261,7 +261,7 @@ Admin:RegisterCommand({"weapon:ammo", "WEAPON:AMMO"},4,true,
     }
 
     for k,v in pairs(ammos) do
-        Inventory.addItem(args.playerId,v,1000)
+        Inventory.AddItem(args.playerId,v,1000)
     end
 end)
 
@@ -289,7 +289,7 @@ Admin:RegisterCommand({"weapon:comps", "WEAPON:COMPS"},4,true,
     }
 
     for k,v in pairs(comps) do
-        Inventory.addItem:AddItem(args.playerId,v,10)
+        Inventory.AddItem:AddItem(args.playerId,v,10)
     end
 end)
 
