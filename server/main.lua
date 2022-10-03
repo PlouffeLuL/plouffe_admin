@@ -74,7 +74,7 @@ function Admin:RegisterCommand(name,permission_level,allow_console,suggestion,cb
     end
 
     if Admin.CommandList[name] then
-        Print(("Command already registered %s"):format(name))
+        print(("Command already registered %s"):format(name))
 
         if Admin.CommandList[name].suggestion then
             TriggerClientEvent('chat:removeSuggestion', -1, ('/%s'):format(name))
@@ -94,11 +94,11 @@ function Admin:RegisterCommand(name,permission_level,allow_console,suggestion,cb
         local command = Admin.CommandList[name]
 
         if not command.allow_console and playerId == 0 then
-			return Print("This command is not accessible from console")
+			return print("This command is not accessible from console")
         end
 
 		if command.suggestion and command.suggestion.validate and #args ~= #command.suggestion.arguments then
-            return  Print(("Missing arguments %s / %s "):format(#args,#command.suggestion.arguments))
+            return  print(("Missing arguments %s / %s "):format(#args,#command.suggestion.arguments))
 		end
 
         local new_args = {}
