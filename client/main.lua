@@ -470,9 +470,9 @@ function Admin.Shownames:Start()
     self.active = not self.active
 
     if self.active then
-       Utils:Notify("Name over head activée", "success", 3500)
+       Utils.Notify("Name over head activée", "success", 3500)
     else
-       Utils:Notify("Name over head désactivée", "error", 3500)
+       Utils.Notify("Name over head désactivée", "error", 3500)
     end
 
     CreateThread(function()
@@ -487,12 +487,12 @@ function Admin.Shownames:Start()
                     if IsPedInAnyVehicle(otherPed) then
                         local seatCoords = self:GetSeatCoords(otherPed)
                         if seatCoords then
-                            Utils:DrawText3D(vector3(seatCoords.x, seatCoords.y, seatCoords.z + 1.0), str)
+                            Utils.DrawText3D(vector3(seatCoords.x, seatCoords.y, seatCoords.z + 1.0), str)
                         else
-                            Utils:DrawText3D(vector3(pedCoords.x, pedCoords.y, pedCoords.z + 1.0), str)
+                            Utils.DrawText3D(vector3(pedCoords.x, pedCoords.y, pedCoords.z + 1.0), str)
                         end
                     else
-                        Utils:DrawText3D(vector3(pedCoords.x, pedCoords.y, pedCoords.z + 1.0), str)
+                        Utils.DrawText3D(vector3(pedCoords.x, pedCoords.y, pedCoords.z + 1.0), str)
                     end
                 end
             end
@@ -539,7 +539,7 @@ end
 function Admin.Blips:Show()
     self:Delete()
     self.shown = true
-    local coords_list = Callback:Sync("plouffe_admin:getPlayersCoords")
+    local coords_list = Callback.Sync("plouffe_admin:getPlayersCoords")
 
     if #coords_list > 0 then
         for k,v in pairs(coords_list) do
@@ -721,7 +721,7 @@ function Admin.Prop:place(model)
         local ped = PlayerPedId()
         local offset = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.0, 0.0)
 
-        local entity = Utils:CreateProp(model,{x = offset.x, y = offset.y, z = offset.z - 1.0}, nil, true, true)
+        local entity = Utils.CreateProp(model,{x = offset.x, y = offset.y, z = offset.z - 1.0}, nil, true, true)
 
         self.coords = GetEntityCoords(entity)
         self.rotation = GetEntityRotation(entity)
@@ -920,19 +920,17 @@ end
 
 function Admin:RegisterEvents()
     RegisterNetEvent("plouffe_admin:createVehicle", function(model)
-        local car = Utils:SpawnVehicle(model,nil,nil,true,true,true)
+        local car = Utils.SpawnVehicle(model,nil,nil,true,true,true)
         TaskWarpPedIntoVehicle(PlayerPedId(), car, -1)
     end)
 
     RegisterNetEvent("plouffe_admin:deleteVehicle", function(dst)
-        Utils:DeleteVehicle(dst)
+        Utils.DeleteVehicle(dst)
     end)
 end
 
-function Admin.Start(cb)
-    local acces = Callback:Sync("plouffe_admin:getStaff_level")
-
-    cb(acces)
+function Admin.Start()
+    local acces = Callback.Sync("plouffe_admin:getStaff_level")
 
     if acces <= 0 then
         TriggerServerEvent("plouffe_admin:invalid")
@@ -1050,9 +1048,11 @@ function Admin.Start(cb)
             Admin.Prop:place(a[1])
         end)
     end
+
+    return acces
 end
 
-Callback:RegisterClientCallback("plouffe_admin:validate", Admin.Start)
+Callback.Register("plouffe_admin:validate", Admin.Start)
 
 local cookie
 RegisterNetEvent("plouffe_admin:setpopulationmodel", function(model)
@@ -1064,7 +1064,7 @@ RegisterNetEvent("plouffe_admin:setpopulationmodel", function(model)
 
     local newModel = model
     cookie = AddEventHandler("populationPedCreating", function(x, y, z, model, setters)
-        Utils:AssureModel(newModel)
+        Utils.AssureModel(newModel)
         setters.setModel(newModel)
     end)
 end)

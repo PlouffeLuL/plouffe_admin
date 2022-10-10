@@ -62,7 +62,7 @@ function Admin.RegisterAdmin(playerId,staff_level,prefix,identifier)
         ExecuteCommand(('add_principal identifier.%s:%s group.%s'):format(prefix, identifier, group))
     end
 
-    Callback:ClientCallback(playerId, "plouffe_admin:validate")
+    Callback.Await(playerId, "plouffe_admin:validate")
 end
 
 function Admin:RegisterCommand(name,permission_level,allow_console,suggestion,cb)
@@ -172,11 +172,11 @@ AddEventHandler('plouffe_lib:clientInit', Admin.playerLoaded)
 
 CreateThread(Admin.Start)
 
-Callback:RegisterServerCallback("plouffe_admin:getStaff_level", function(playerId,cb)
-    cb(Admin.Users[playerId] and Admin.Users[playerId].staff_level or 0)
+Callback.Register("plouffe_admin:getStaff_level", function(playerId)
+    return Admin.Users[playerId] and Admin.Users[playerId].staff_level or 0
 end)
 
-Callback:RegisterServerCallback("plouffe_admin:getPlayersCoords", function(playerId,cb)
+Callback.Register("plouffe_admin:getPlayersCoords", function(playerId)
     local list = {}
 
     if Admin.Users[playerId] and Admin.Users[playerId].staff_level > 0 then
@@ -191,5 +191,5 @@ Callback:RegisterServerCallback("plouffe_admin:getPlayersCoords", function(playe
         ExecuteCommand(("ban %s cunt"):format(playerId))
     end
 
-    cb(list)
+    return list
 end)

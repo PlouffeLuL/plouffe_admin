@@ -289,7 +289,7 @@ Admin:RegisterCommand({"weapon:comps", "WEAPON:COMPS"},4,true,
     }
 
     for k,v in pairs(comps) do
-        Inventory.AddItem:AddItem(args.playerId,v,10)
+        Inventory.AddItem(args.playerId,v,10)
     end
 end)
 
