@@ -160,13 +160,19 @@ Admin:RegisterCommand({"setgroup", "SETGROUP"},1,true,
     end
 end)
 
+Admin:RegisterCommand({"jail_breakout", "JAIL_BREAKOUT"},1,true,
+    {help = "Envoie quelqun en prison", validate = true, arguments = {}
+},function(playerId, args, raw)
+    exports.plouffe_jail:Breakout()
+end)
+
 Admin:RegisterCommand({"jail", "JAIL"},1,true,
     {help = "Envoie quelqun en prison", validate = true, arguments = {
         {name = 'playerId', help = "Id du joueur", type = 'number'},
         {name = 'time', help = "Duré", type = 'number'}
     }
 },function(playerId, args, raw)
-    exports.plouffe_jail:AdminSendToJail(args.playerId, args.time)
+    exports.plouffe_jail:Set(args.playerId, args.time)
 end)
 
 Admin:RegisterCommand({"unjail", "UNJAIL"},1,true,
@@ -174,7 +180,24 @@ Admin:RegisterCommand({"unjail", "UNJAIL"},1,true,
         {name = 'playerId', help = "Id du joueur", type = 'number'}
     }
 },function(playerId, args, raw)
-    exports.plouffe_jail:AdminRemoveFromJail(args.playerId)
+    exports.plouffe_jail:Remove("playerId", args.playerId)
+end)
+
+Admin:RegisterCommand({"comserv", "COMSERV"},1,true,
+    {help = "Envoie quelqun en prison", validate = true, arguments = {
+        {name = 'playerId', help = "Id du joueur", type = 'number'},
+        {name = 'amount', help = "Duré", type = 'number'}
+    }
+},function(playerId, args, raw)
+    exports.plouffe_jail:AddComServ(args.playerId, args.amount)
+end)
+
+Admin:RegisterCommand({"clearcomserv", "CLEARCOMSERV"},1,true,
+    {help = "Sortir quelqun de prison", validate = true, arguments = {
+        {name = 'playerId', help = "Id du joueur", type = 'number'}
+    }
+},function(playerId, args, raw)
+    exports.plouffe_jail:RemoveComServ("playerId", args.playerId)
 end)
 
 Admin:RegisterCommand({"bennys", "BENNYS"},1,true,

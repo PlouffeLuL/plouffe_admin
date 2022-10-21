@@ -62,7 +62,7 @@ function Admin.RegisterAdmin(playerId,staff_level,prefix,identifier)
         ExecuteCommand(('add_principal identifier.%s:%s group.%s'):format(prefix, identifier, group))
     end
 
-    Callback.Await(playerId, "plouffe_admin:validate")
+    Callback.Sync(playerId, "plouffe_admin:validate")
 end
 
 function Admin:RegisterCommand(name,permission_level,allow_console,suggestion,cb)
