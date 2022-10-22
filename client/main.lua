@@ -155,57 +155,7 @@ local Admin = {
     Prop = {active = false},
     Scan = {active = false},
     Shownames = {active = false},
-    Blips = {active = false, shown = false, list = {}},
-
-    Menu = {
-        {
-            id = 1,
-            header = "Profil de modération",
-            txt = "Modifier vos options personel de modération",
-            params = {
-                args = {
-                    cmd = "admin:profile"
-                }
-            }
-        },
-
-        {
-            id = 2,
-            header = "Dev actions",
-            txt = "Show dev actions",
-            params = {
-                event = "",
-                args = {
-                    cmd = "admin:dev_menu"
-                }
-            }
-        },
-
-        {
-            id = 3,
-            header = "Vehicle actions",
-            txt = "Show vehicle actions",
-            params = {
-                event = "",
-                args = {
-                    cmd = "admin:vehicle_menu"
-                }
-            }
-        },
-
-        {
-            id = 4,
-            header = "Players actions",
-            txt = "Show players actions",
-            params = {
-                event = "",
-                args = {
-                    cmd = "admin:players_menu"
-                }
-            }
-        }
-    }
-
+    Blips = {active = false, shown = false, list = {}}
 }
 
 function Admin.NoClip:Entity()
